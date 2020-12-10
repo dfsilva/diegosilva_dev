@@ -1,6 +1,5 @@
 import 'package:dev_diegosilva/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,8 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
-
-
   List<String> commands = [];
   TextEditingController _commandController;
   FocusNode _commandFocus;
@@ -60,14 +57,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           Expanded(
               child: TextField(
             keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.go,
+            textInputAction: TextInputAction.done,
             controller: _commandController,
             focusNode: _commandFocus,
             cursorColor: Colors.green,
             cursorWidth: 5,
             autofocus: true,
             decoration: InputDecoration(border: InputBorder.none, disabledBorder: InputBorder.none),
-            style: GoogleFonts.vt323(color: Colors.green),
+            style: SiteTheme.textTheme,
             onSubmitted: (str) => _process(str),
           ))
         ],
@@ -98,22 +95,51 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     }
   }
 
-  Widget _processCommand(String cmd) {
-    final smd = cmd.toLowerCase();
-
-    if(smd == "help" || smd.isEmpty){
-      return _printHelp();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [Text("Command not found...", style: SiteTheme.textTheme)],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          HeaderWidget(),
+          ...(commands.map((e) => [PrintCommand(cmd: e), ProcessCommand(cmd: e)]).expand((e) => e)),
+          _inputLine()
+        ],
       ),
-    );
+    ));
   }
+}
 
-  Widget _printCommand(String cmd) {
+class ProcessCommand extends StatelessWidget {
+  const ProcessCommand({
+    Key key,
+    @required this.cmd,
+  }) : super(key: key);
+
+  final String cmd;
+
+  @override
+  Widget build(BuildContext context) {
+    final smd = cmd.toLowerCase();
+    if (smd == "help" || smd.isEmpty) {
+      return Help();
+    }
+    return CommandNotFound();
+  }
+}
+
+class PrintCommand extends StatelessWidget {
+  final String cmd;
+
+  const PrintCommand({
+    Key key,
+    this.cmd,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -121,34 +147,31 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
     );
   }
+}
 
-  Widget _processPresentation() {
+class CommandNotFound extends StatelessWidget {
+  const CommandNotFound({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [Text("####################################", style: SiteTheme.textTheme)],
-          ),
-          Row(
-            children: [Text("### Diego Ferreira da Silva      ###", style: SiteTheme.textTheme)],
-          ),
-          Row(
-            children: [Text("### diegosiuniube@gmail.com      ###", style: SiteTheme.textTheme)],
-          ),
-          Row(
-            children: [Text("### https://github.com/dfsilva   ###", style: SiteTheme.textTheme)],
-          ),
-          Row(
-            children: [Text("####################################", style: SiteTheme.textTheme)],
-          ),
-        ],
+      child: Row(
+        children: [Text("Command not found...", style: SiteTheme.textTheme)],
       ),
     );
   }
+}
 
-  Widget _printHelp() {
+class Help extends StatelessWidget {
+  const Help({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -167,20 +190,40 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       ),
     );
   }
+}
+
+class HeaderWidget extends StatelessWidget {
+  const HeaderWidget({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-      scrollDirection: Axis.vertical,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _processPresentation(),
-          ...(commands.map((e) => [_printCommand(e), _processCommand(e)]).expand((e) => e)),
-          _inputLine()
+          Row(
+            children: [Text("###############################################", style: SiteTheme.textTheme)],
+          ),
+          Row(
+            children: [Text("### Diego Ferreira da Silva                 ###", style: SiteTheme.textTheme)],
+          ),
+          Row(
+            children: [Text("### diegosiuniube@gmail.com                 ###", style: SiteTheme.textTheme)],
+          ),
+          Row(
+            children: [Text("### https://github.com/dfsilva              ###", style: SiteTheme.textTheme)],
+          ),
+          Row(
+            children: [Text("### https://www.linkedin.com/in/dsilva82/   ###", style: SiteTheme.textTheme)],
+          ),
+          Row(
+            children: [Text("###############################################", style: SiteTheme.textTheme)],
+          ),
         ],
       ),
-    ));
+    );
   }
 }
