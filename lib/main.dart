@@ -203,6 +203,8 @@ class HeaderWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
             children: [Text("###############################################", style: SiteTheme.textTheme)],
